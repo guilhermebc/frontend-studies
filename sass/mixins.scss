@@ -1,0 +1,135 @@
+//positions
+@mixin position($pos:null, $top:null, $bottom:null, $right:null, $left:null) {
+    position: $pos;
+    top: $top;
+    bottom: $bottom;
+    right: $right;
+    left: $left;
+}
+
+@mixin fixed($args...) {
+    @include position(fixed, $args...);
+}
+
+@mixin absolute($args...){
+    @include position(absolute, $args...);
+}
+
+@mixin relative($args...){
+    @include position(relative, $args...);
+}
+
+//fonts
+@mixin font-configs($fsize: null, $color:null, $family:null, $l-height:null){
+    font: {
+        size: $fsize;
+        family: $family;
+    }
+
+    color: $color;
+
+    line-height: $l-height;
+}
+
+//bg image configs
+@mixin background-image ($url: null, $size:null, $pos-x: null, $pos-y: null, $repeat) {
+    background: {
+        image:url($url);
+        size: $size;
+        position: $pos-x $pos-y;
+        repeat: $repeat;
+    };
+}
+
+//media query generator
+$breakpoints: (
+    "phone-small":  360px,
+    "phone":        400px,
+    "phone-wide":   480px,
+    "phablet":      560px,
+    "tablet-small": 640px,
+    "tablet":       768px,
+    "tablet-wide":  1024px,
+    "desktop":      1200px,
+    "desktop-wide": 1440px,
+    "desktop-large":1600px
+);
+
+@mixin mq($width, $type: min) {
+    @if map_has_key($breakpoints, $width) {
+        $width: map_get($breakpoints, $width);
+
+        @if $type == max {
+            $width: $width - 1px;
+        }
+
+        @media only screen and (#{$type}-width: $width) {
+            @content;
+        }
+    }
+}
+
+// margin generator 
+@mixin push--auto {
+    margin: {
+        left: auto;
+        right: auto;
+    }
+}
+
+@mixin make-margin($direction: null, $from: 1, $to: 30) {
+    @if $direction {
+        @for $i from $from through $to {
+            .margin-#{$direction}-#{$i} {
+                margin-#{$direction}: #{$i}px;
+            }
+        }
+    }
+}
+
+//padding generator
+@mixin make-padding($direction: null, $from: 1, $to: 30) {
+    @if $direction {
+        @for $i from $from through $to {
+            .padding-#{$direction}-#{$i} {
+                padding-#{$direction}: #{$i}px;
+            }
+        }
+    }
+}
+
+//pseudo configs
+@mixin pseudo($content: '', $display: block, $args...){
+    content: $content;
+    display: $display;
+
+    @include absolute($args...);
+}
+
+//transition configs
+@mixin transition ($prop, $time, $effect) {
+    -webkit-transition: $prop $time $effect;
+    -moz-transition: $prop $time $effect;
+    -ms-transition: $prop $time $effect;
+    -o-transition: $prop $time $effect;
+    transition: $prop $time $effect;
+}
+
+//transform configs
+@mixin transform ($content) {
+    -webkit-transform: $content;
+    -moz-transform: $content;
+    -ms-transform: $content;
+    -o-transform: $content;
+    transform: $content;
+}
+
+//text extremities configs
+@mixin truncate($truncation-boundary) {
+    max-width: $truncation-boundary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
